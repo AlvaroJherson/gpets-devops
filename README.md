@@ -20,3 +20,9 @@
 ```bash
 docker build -t gpets .
 
+## Branch Policies
+For a production environment, the `main` branch should be protected with:
+- Pull Request required
+- Minimum 1 reviewer approval
+- Build validation using CI pipeline
+- No direct pushes to main
