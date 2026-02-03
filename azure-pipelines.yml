@@ -1,0 +1,45 @@
+trigger:
+  - main
+
+variables:
+  nodeVersion: '18.x'
+  imageName: 'gpets'
+  dockerTag: '$(Build.BuildId)-$(Build.SourceVersion)'
+
+stages:
+  - stage: Build
+    displayName: Build and Analyze
+    jobs:
+      - job: BuildJob
+        displayName: Build React App
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: $(nodeVersion)
+            displayName: Install Node.js
+
+          - script: |
+              npm install
+              npm run build
+            displayName: Install dependencies and build app
+
+          - script: |
+              npm audit --audit-level=high
+            displayName: Run security audit
+
+  - stage: Publish
+    displayName: Build Docker Image
+    dependsOn: Build
+    jobs:
+      - job: DockerJob
+        displayName: Docker Build
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - script: |
+              docker build \
+                -t $(imageName):$(dockerTag) \
+                -t $(imageName):latest .
+            displayName: Build and tag Docker image
