@@ -2,7 +2,7 @@ import axios from 'axios';
 import type { Pet } from '../types/Pet';
 
 // Configurar URL base (puede ser variable de entorno)
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
 const api = axios.create({
     baseURL: API_URL,
